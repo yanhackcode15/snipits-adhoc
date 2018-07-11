@@ -2,6 +2,9 @@
 data/
 *.DS_Store
 
+# keys
+serviceAccountKey.json
+
 # Logs
 logs
 *.log
