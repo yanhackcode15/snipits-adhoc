@@ -3,6 +3,30 @@ html
   include includes/head.pug
   body
     div
-      include includes/table.pug
+      ul
+        li 
+          a(href="recent") Most Recent Pay Hours
+    div
+      form
+        .form-group
+          label Select Year
+          select
+            option 2018
+            option 2017
+        .form-group
+          label Select Month
+          select
+            option December
+            option November
+            option October
+            option September
+            option August
+            option July
+            option June
+            option May
+            option April
+            option March
+            option Febuary
+            option January
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous")

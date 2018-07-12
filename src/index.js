@@ -2,11 +2,8 @@
 const hoursCalc = require('./hours/calc');
 const productivityCalc = require('./productivity/calc');
 
-let hoursStats = hoursCalc();
-let productivityStats = productivityCalc();
-
-module.exports = function x(a, b) {
-	return Promise.all([hoursStats, productivityStats])
+module.exports = function (fromDate, toDate) {
+	return Promise.all([hoursCalc(fromDate, toDate), productivityCalc(fromDate, toDate)])
 		.then(results=>{
 			let hoursResult = results[0];
 			let productivityResult = results[1];

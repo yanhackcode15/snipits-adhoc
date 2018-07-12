@@ -4,13 +4,14 @@ const getCookie = require('../common/cookie');
 const getPage = require('../common/pageBody');
 const getHoursContent = require('./filteredContent');
 
-module.exports = ()=> {
+module.exports = (startDate, endDate)=> {
 	const username = 'yan';
 	const password = 'huy95';
 	const ciphers = 'DES-CBC3-SHA';
 
-	const fromDate = process.argv[2];
-	const toDate = process.argv[3];
+	const fromDate = startDate;
+	const toDate = endDate; 
+
 	const formData = {
 		break_out_by_week:'Y',
 		round_hours:'N',

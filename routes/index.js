@@ -1,10 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var x = require('../src/index');
+var getStats = require('../src/index');
+var getLastPayDatePair = require('../src/common/getRecent'); //a function returning an ojbect with key fromDate and toDate; 
 
 router.get('/', function(req, res, next){
-	x(p1, p2).then(results=>{
-		res.render('indexPage', {output: results});
-	}); 
-})
+	res.render('indexPage', {});
+});
+
+router.get('/recent', function(req, res, next){
+	var fromDate = getLastPayDatePair().fromDate;
+	var toDate = getLastPayDatePair().toDate;
+	getStats(fromDate, toDate)
+		.then(results=>{
+			res.render('recentPage', {output: results});
+		}); 
+});
+
 module.exports = router;

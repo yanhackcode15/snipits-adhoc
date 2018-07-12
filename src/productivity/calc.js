@@ -28,12 +28,13 @@ const reportKeys = [
 	     'additionalHourly',
 	];
 
-module.exports = ()=> {
+module.exports = (startDate, endDate)=> {
 	const username = 'yan';
 	const password = 'huy95';
 	const ciphers = 'DES-CBC3-SHA';
-	const fromDate = process.argv[2];
-	const toDate = process.argv[3];
+	const fromDate = startDate;
+	const toDate = endDate; 
+
 	const formData = {
 		level:'Category',
 		company_id:'100',
