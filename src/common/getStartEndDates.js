@@ -213,7 +213,10 @@ const startDateArry = [
 	20180101,
 ];
 
-module.exports = () => {
+const anchorStartDate = 20180101;
+const anchorEndDate = 20180114;
+
+exports.recentStartEndDates = () => {
 	var index = endDateArry.findIndex(findFirstSmallNumber);
 	var endDate = endDateArry[index].toString().split('');
 	endDate.splice(4,0,'-');
@@ -223,13 +226,31 @@ module.exports = () => {
 	startDate.splice(4,0,'-');
 	startDate.splice(7,0,'-');
 	startDate = startDate.join('');
+
 	var datePair = {
 		fromDate: startDate,
 		toDate: endDate,
 	};
-	console.log('fromdate', startDateArry[index].toString());
+	// console.log('fromdate', startDateArry[index].toString());
 	return datePair;
 }
+
+exports.startEndDates = (mth, yr)=>{
+	var anchorEndDate = new Date(2018, 0, 14); //UTC format of 2018/01/14
+	//find all end dates falling in the mth, yr value, (6, 2018) => end dates between 2018/06/01 and 2018/06/30
+	var firstDate = new Date(yr, mth-1, 1); //new Date(2018, 5, 1) => 6/01/2018 in UTC format
+	var lastDate = new Date(yr, mth, 0); //new Date(2018, 6, 0) => 6/30/2018 in UTC format
+	var index1 = payPeriodsBetween(anchorEndDate, firstDate) + 1; //return integer of pay periods from the anchor date
+	var index2 = payPeriodsBetween(anchorEndDate, lastDate);
+
+	var datePairs = [];
+	for (let i = index1; i <= index2; i++) {
+		let endDate = new Date(anchorEndDate.getTime() + i * (1000 * 60 * 60 * 24 * 14));
+		let fromDate = new Date(endDate.getTime() - 13 * (1000 * 60 * 60 * 24));
+		datePairs.push({fromDate: dateConverter(fromDate), toDate: dateConverter(endDate)});
+	}
+	return datePairs;
+};
 
 function getToday() {
 	var today = new Date();
@@ -244,3 +265,20 @@ function findFirstSmallNumber(element) {
 	return element < getToday();
 }
 
+function daysBetween(day1, day2) { //return days bewteen day 1 and day 2 including day 2 but excluding day 1, day 1 and day 1 are dates objects
+	return Math.floor((day2 - day1)/(1000 * 3600 * 24));
+}
+
+function payPeriodsBetween(day1, day2) {
+	return Math.floor(daysBetween(day1, day2)/14);
+}
+
+function dateConverter(dateUTC) {
+	//return a formatted yyyy-mm-dd from a UTC date object
+	var date = dateUTC.getDate();
+	var date = (date < 10) ? ('0' + date) : ('' + date);
+	var	month = dateUTC.getMonth() + 1;
+	var month = (month < 10) ? ('0' + month) : ('' + month);
+	var year = '' + dateUTC.getFullYear();
+	return (year + '-' +  month + '-' + date);
+}
