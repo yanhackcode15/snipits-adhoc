@@ -1,6 +1,6 @@
 - var dataObj = output[Object.keys(output)[1]] //object containing perf hours data for one employee
-- var blackList = ['regular', 'overtime', 'serviceRev', 'reportedTips', 'haircareRev', 'productRev', 'totalRev', 'hours', 'otherRetailCommission', 'otherRetailRev', 'haircareCommission', 'addonCommission', 'prepaidCommission', 'totalCommission', 'additionalHourly', 'haircuts', 'addons', 'actualTips', 'haircare']
-- var whiteList = ['regularTotal', 'overtimeTotal', 'Total']
+- var blackList = ['regular', 'overtime', 'serviceRev', 'reportedTips', 'haircareRev', 'productRev', 'totalRev', 'hours', 'otherRetailCommission', 'otherRetailRev', 'haircareCommission', 'addonCommission', 'prepaidCommission', 'totalCommission', 'additionalHourly', 'haircuts', 'addons', 'actualTips', 'haircare', 'regularTotal', 'overtimeTotal', 'Yan-Owner Hu']
+- var whiteList = ['Total']
 
 table.table.table-bordered
   thead.thead-dark
@@ -15,7 +15,8 @@ table.table.table-bordered
         if whiteList.includes(name)
           th(scope="row")= name
             td= employeeData.hours 
-        else if name != 'Yan-Owner Hu'
+        //- else if name != 'Yan-Owner Hu'
+        else if !blackList.includes(name)
           th(scope="row")= name
           each val, key in dataObj
             if !blackList.includes(key)

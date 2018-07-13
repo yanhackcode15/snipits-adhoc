@@ -2,11 +2,11 @@ doctype html
 html
   include includes/head.pug
   body
-    div
+    div.container
       ul
         li 
           a(href="/admin_0826/recent") Most Recent Pay Hours
-    div
+    div.container
       form(action="/admin_0826/viewHours/" method="post")
         .form-group
           label(for="year") Select Year

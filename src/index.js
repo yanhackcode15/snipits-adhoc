@@ -13,5 +13,5 @@ module.exports = function (fromDate, toDate) {
 			}
 			console.log("all stats",allStats);
 			return allStats;
-		})
-	}
+		});
+};

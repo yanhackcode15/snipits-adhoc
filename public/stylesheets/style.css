@@ -2,6 +2,11 @@
 	font-size: 12px;
 }
 
+.container {
+	padding: 20px;
+	margin: 20px;
+}
+
 .table > thead > tr {
 	height: 56px;
 }
