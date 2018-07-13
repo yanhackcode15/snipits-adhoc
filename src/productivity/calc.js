@@ -124,21 +124,21 @@ function productivityObject(normalizedArray){
 				break;
 			case 'Hair Care':
 				employee.haircare = numeral(row[5]).value();
-				employee.haircareRev = numeral(row[7]).value();
+				employee.haircareRev = +numeral(row[7]).value().toFixed(0);
 				break;
 			case 'Services Subtotal':
 				const serRev = employee.serviceRev = numeral(row[7]).value();
 				const reportedTips = numeral(serRev).value() * 0.1;
 				const actualTips = numeral(serRev).value() * tip;
-				employee.reportedTips = reportedTips;
-				employee.actualTips = actualTips;
+				employee.reportedTips = +reportedTips.toFixed(0);
+				employee.actualTips = +actualTips.toFixed(0);
 				break;
 			case 'Products Subtotal':
-				employee.productRev = numeral(row[7]).value();
+				employee.productRev = +numeral(row[7]).value().toFixed(0);
 				break;
 			case 'Total':
-				employee.totalRev = numeral(row[7]).value();
-				employee.hours = numeral(row[1]).value();
+				employee.totalRev = +numeral(row[7]).value().toFixed(0);
+				employee.hours = +numeral(row[1]).value().toFixed(2);
 		}
 		return obj;
 	}, {});
@@ -165,13 +165,13 @@ function productivityObject(normalizedArray){
 			: (addonRat <= 8.9 ? addonCount * 0.5 : 0);
 		const prepaidComm = employee.prepaid * 5 || 0 ;
 
-		employee.retailRatio = retailRat;
-		employee.addonRatio = addonRat;
-		employee.haircareCommission = haircareComm;
-		employee.addonCommission = addonComm;
-		employee.prepaidCommission = prepaidComm;
-		employee.totalCommission = haircareComm + addonComm + prepaidComm;
-		employee.additionalHourly = (employee.totalCommission + employee.actualTips) / employee.hours;
+		employee.retailRatio = +retailRat.toFixed(1);
+		employee.addonRatio = +addonRat.toFixed(1);
+		employee.haircareCommission = +haircareComm.toFixed(1);
+		employee.addonCommission = +addonComm.toFixed(1);
+		employee.prepaidCommission = +prepaidComm.toFixed(0);
+		employee.totalCommission = +(employee.haircareCommission + employee.addonCommission + employee.prepaidCommission);
+		employee.additionalHourly = +((employee.totalCommission + employee.actualTips) / employee.hours).toFixed(1);
 	}
 
 	for (let employee in dataObj) {

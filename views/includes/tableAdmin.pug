@@ -7,18 +7,14 @@ table.table.table-bordered
     tr
       th(scope="col") Name
       each val, key in dataObj	
-        if !blackList.includes(key)
-          th(scope="col")= key
+        th(scope="col")= key
   tbody
     each employeeData, name in output
       tr
         if whiteList.includes(name)
           th(scope="row")= name
-            td= employeeData.hours 
-        else if name != 'Yan-Owner Hu'
+            td= employeeData.hours
+        else
           th(scope="row")= name
-          each val, key in dataObj
-            if !blackList.includes(key)
+            each val, key in dataObj
               td= employeeData[key] 
-        
-

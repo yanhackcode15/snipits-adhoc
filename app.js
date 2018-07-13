@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
+var adminRouter = require('./routes/admin');
 var app = express();
 
 // view engine setup
@@ -21,6 +22,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.use('/', indexRouter);
+app.use('/admin_0826', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
