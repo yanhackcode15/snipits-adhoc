@@ -9,20 +9,29 @@ const dateRange1 = require('../common/dateRange');
 
 
 module.exports = (startDate, endDate) => {
+<<<<<<< HEAD
 	let dates = dateRange1(startDate, endDate); 
 	let results = [];
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.Hour.find({date: singleDay})
 			.exec(function(err, docs){
 				if (err) {
+<<<<<<< HEAD
 					console.error("error finding data in cache");
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 					return null;
 				}
 				else if (docs.length === 0) {
 					return fetchPortal(singleDay, singleDay)
 						.then(dataArry=>{
+<<<<<<< HEAD
 							dataArry.forEach(element=>saveToDB(element));
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 							return dataArry;
 						});
 				}
@@ -36,12 +45,15 @@ module.exports = (startDate, endDate) => {
 	return Promise.all(results)
 		.then(dataArry=>{
 			if (dataArry.find(element=>element===null) === null) {
+<<<<<<< HEAD
 				console.error('something went wrong');
 			}
 			else {
 				let perDayPerStylistArry = [];
 				dataArry.forEach(element=>{element.forEach(ele=>perDayPerStylistArry.push(ele))});
 				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 				return hoursComputed(viewReadyObj);
 			}
 		});
@@ -67,7 +79,10 @@ function prepareForView(dataArry, headerRow) {
 			dataObj[nameKey][dateKey] = dataArry[i].hours; 
 		}
 	}
+<<<<<<< HEAD
 	const filledDataObj = {};
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	for (let employee in dataObj) {
 		filledDataObj[employee] = fillDates(dataObj[employee], rowTemplate);
 	}
@@ -75,25 +90,34 @@ function prepareForView(dataArry, headerRow) {
 }
 
 function fillDates(rowObj, rowTemplate) {
+<<<<<<< HEAD
 	return Object.assign({}, rowTemplate, rowObj);
 }	
 
 function saveToDB (singleDocument) {
 	let newHour = new Collection.Hour();
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	newHour.date = singleDocument.date;
 	newHour.dayOfWeek = singleDocument.dayOfWeek;
 	newHour.name = singleDocument.name;
 	newHour.hours = singleDocument.hours;
 	newHour.save(function(err, data){
 		if (err) {
+<<<<<<< HEAD
 			console.error('error saving document');
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 		}
 	});
 }
 function fetchPortal(startDate, endDate) { 
 	// return an array [] of {name:, date:, hours:,}
+<<<<<<< HEAD
 	const username = process.env.PORTAL_ID;
 	const password = process.env.PORTAL_PASSWORD;
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	const ciphers = 'DES-CBC3-SHA';
 
 	const fromDate = startDate;
@@ -119,8 +143,11 @@ function fetchPortal(startDate, endDate) {
 		let hoursArry = [];
 		for (let name in hoursWorked) {
 			let myHours = hoursWorked[name];
+<<<<<<< HEAD
 			for (let date in myHours) {
 				const hours = +myHours[date];
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 				hoursArry.push({name, date, hours});
 			}
 		}
@@ -175,7 +202,10 @@ function arryToObj(tableString) {
 	hrsInversedTbl = stringToArry.removeCol(hrsInversedTbl, [0, 1, -1, -2, -3, -4]);
 	let hrsTble = stringToArry.flipAxis(hrsInversedTbl);
 
+<<<<<<< HEAD
     let headerRow = hrsTble.shift();
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
     //clean headerRow values with reformat date values
     headerRow = headerRow.map(dateFormated);
     hrsTble.shift(); //--> remove the empty row, the horizontal line in the markup

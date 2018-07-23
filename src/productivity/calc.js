@@ -32,20 +32,29 @@ const reportKeys = [
 	     'additionalHourly',
 	];
 module.exports = (startDate, endDate) => {
+<<<<<<< HEAD
 	let dates = dateRange(startDate, endDate); 
 	let results = [];
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.Productivity.find({date: singleDay})
 			.exec(function(err, docs){
 				if (err) {
+<<<<<<< HEAD
 					console.error("error finding data in cache");
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 					return null;
 				}
 				else if (docs.length === 0) {
 					return fetchPortal(singleDay, singleDay)
 						.then(dataArry=>{
+<<<<<<< HEAD
 							dataArry.forEach(element=>saveToDB(element));
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 							return dataArry;
 						});
 				}
@@ -55,6 +64,7 @@ module.exports = (startDate, endDate) => {
 			});
 		results.push(findPromise);
 	}
+<<<<<<< HEAD
 
 	return Promise.all(results)
 		.then(dataArry=>{
@@ -73,6 +83,8 @@ module.exports = (startDate, endDate) => {
 function fetchPortal(startDate, endDate){
 	const username = process.env.PORTAL_ID;
 	const password = process.env.PORTAL_PASSWORD;
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	const ciphers = 'DES-CBC3-SHA';
 	const fromDate = startDate;
 	const toDate = endDate; 
@@ -92,14 +104,19 @@ function fetchPortal(startDate, endDate){
 	.then(cookie => getPage(cookie, 'https://portal.snipits.com/runreport.cfm?name=Productivity', formData, ciphers))
 	.then(productivityPg => getProductivityContent(productivityPg))
 	.then(productivityTbl => {
+		console.log('agegadgaw');
 		let prodArry = productivityArray(productivityTbl);
+<<<<<<< HEAD
 		let prodObj = productivityObject(prodArry);
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 		let newProdArry = [];
 		for (let name in prodObj) {
 			let data = prodObj[name];
 			newProdArry.push({
 				name,
 				date: fromDate,
+<<<<<<< HEAD
 				hours: Number(data.hours) || 0,
 				haircuts: Number(data.haircuts) || 0,
 				addons: Number(data.addons) || 0,
@@ -110,6 +127,8 @@ function fetchPortal(startDate, endDate){
 				otherRetailRev: Number(data.otherRetailRev) || 0,
 				productRev: Number(data.productRev) || 0,
 				totalRev: Number(data.totalRev) || 0,
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 			});
 		}
 
@@ -133,7 +152,10 @@ function fetchPortal(startDate, endDate){
 	});
 };
 function saveToDB (singleDocument) {
+<<<<<<< HEAD
 	let newProd = new Collection.Productivity();
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	newProd.date = singleDocument.date;
 	newProd.name = singleDocument.name;
 	newProd.hours = singleDocument.hours;
@@ -149,7 +171,10 @@ function saveToDB (singleDocument) {
 
 	newProd.save(function(err, data){
 		if (err) {
+<<<<<<< HEAD
 			console.error('error saving document');
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 		}
 	});
 }
@@ -162,6 +187,7 @@ function prepareForView(dataArry, headerRow) {
 		template[metrix] = 0;
 		return template;
 	}, {});
+<<<<<<< HEAD
 	const employeeTemplate = {
 		haircuts: 0,
 		addons: 0,
@@ -223,6 +249,8 @@ function prepareForView(dataArry, headerRow) {
 		dataObj[name]['prepaid Commission'] = '$' + dataObj[name]['prepaid Commission'].toFixed(0);
 		dataObj[name]['total Commission'] = '$' + dataObj[name]['total Commission'].toFixed(0);
 		dataObj[name]['additional Hourly'] = '$' + dataObj[name]['additional Hourly'].toFixed(1);
+=======
+>>>>>>> using mongo db as cache and fetch from portal if db record not exist't
 	}
 	return dataObj;
 }
