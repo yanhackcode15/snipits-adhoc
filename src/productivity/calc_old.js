@@ -4,10 +4,6 @@ const stringToArry = require('../common/stringToArray');
 const getCookie = require('../common/cookie');
 const getPage = require('../common/pageBody');
 const getProductivityContent = require('./filteredContent');
-const dateFormated = require('../common/dateFormat');
-const dateRange = require('../common/dateRange');
-const Collection = require('../../models/collection');
-
 const tip = 0.2066;
 const reportKeys = [
 		 'haircuts', 
@@ -31,48 +27,8 @@ const reportKeys = [
 	     'actualTips',
 	     'additionalHourly',
 	];
-module.exports = (startDate, endDate) => {
-	var dates = dateRange(startDate, endDate); 
-	var results = [];
-	console.log('dagagggwsg', dates);
-	for (let i = 0; i < dates.length; i++) {
-		let singleDay = dates[i];
-		let findPromise = Collection.Productivity.find({date: singleDay})
-			.exec(function(err, docs){
-				if (err) {
-					console.log("error finding data in cache");
-					return null;
-				}
-				else if (docs.length === 0) {
-					return fetchPortal(singleDay, singleDay)
-						.then(dataArry=>{
-							dataArry.map(element=>saveToDB(element));
-							return dataArry;
-						});
-				}
-				else {
-					return docs; 
-				}
-			});
-		results.push(findPromise);
-	}
 
-	return Promise.all(results)
-		.then(dataArry=>{
-			if (dataArry.find(element=>element===null) === null) {
-				console.log('something went wrong');
-			}
-			else {
-				let perDayPerStylistArry = [];
-				dataArry.forEach(element=>{element.forEach(ele=>perDayPerStylistArry.push(ele))});
-				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
-				return viewReadyObj;
-				// return hoursComputed(viewReadyObj);
-			}
-		});
-}
-
-function fetchPortal(startDate, endDate){
+module.exports = (startDate, endDate)=> {
 	const username = 'yan';
 	const password = 'huy95';
 	const ciphers = 'DES-CBC3-SHA';
@@ -94,124 +50,12 @@ function fetchPortal(startDate, endDate){
 	.then(cookie => getPage(cookie, 'https://portal.snipits.com/runreport.cfm?name=Productivity', formData, ciphers))
 	.then(productivityPg => getProductivityContent(productivityPg))
 	.then(productivityTbl => {
-		console.log('agegadgaw');
 		let prodArry = productivityArray(productivityTbl);
 		const prodObj = productivityObject(prodArry);
-		console.log(prodObj);
-		let newProdArry = [];
-		for (let name in prodObj) {
-			let data = prodObj[name];
-			newProdArry.push({
-				name,
-				date: fromDate,
-				hours: Number(data.hours)||0,
-				haircuts: Number(data.haircuts)||0,
-				addons: Number(data.addons)||0,
-				haircare: Number(data.haircare)||0,
-				prepaid: Number(data.prepaid)||0,
-				serviceRev: Number(data.serviceRev)||0,
-				haircareRev: Number(data.haircareRev)||0,
-				otherRetailRev: Number(data.otherRetailRev)||0,
-				productRev: Number(data.productRev)||0,
-				totalRev: Number(data.totalRev)||0,
-			});
-		}
-
-		if(newProdArry.length===0) {
-			newProdArry.push({
-				name: 'Yan-Owner Hu',
-				date: fromDate,
-				hours: 0,
-				haircuts: 0,
-				addons: 0,
-				haircare: 0,
-				prepaid: 0,
-				serviceRev: 0,
-				haircareRev: 0,
-				otherRetailRev: 0,
-				productRev: 0,
-				totalRev: 0,
-			});	
-		}
-		return newProdArry;
+		return prodObj;
+		// console.log(prodObj);
 	});
 };
-function saveToDB (singleDocument) {
-	var newProd = new Collection.Productivity();
-	newProd.date = singleDocument.date;
-	newProd.name = singleDocument.name;
-	newProd.hours = singleDocument.hours;
-	newProd.haircuts = singleDocument.haircuts;
-	newProd.addons = singleDocument.addons; 
-	newProd.haircare = singleDocument.haircare;
-	newProd.prepaid = singleDocument.prepaid;
-	newProd.serviceRev = singleDocument.serviceRev;
-	newProd.haircareRev = singleDocument.haircareRev;
-	newProd.otherRetailRev = singleDocument.otherRetailRev;
-	newProd.productRev = singleDocument.productRev;
-	newProd.totalRev = singleDocument.totalRev;
-
-	newProd.save(function(err, data){
-		if (err) {
-			console.log('error saving document');
-		}
-		else {
-			// console.log('saved one hour doc', data);
-		}
-	});
-}
-
-function prepareForView(dataArry, headerRow) {
-	//dataArry is in [{name, date, dayOfWeek, hours}]
-	//return {name: {YYYY-MM-DD-MON: 7}, name:{...}}
-	let dataObj = {};
-	let rowTemplate = headerRow.reduce((template, metrix)=>{
-		template[metrix] = 0;
-		return template;
-	}, {});
-	for (let i = 0; i < dataArry.length; i++) {
-		let employee = {};
-		let nameKey = dataArry[i].name;  
-		if (!dataObj[nameKey]) { //first time creating nameKey
-			dataObj[nameKey] = employee;
-			dataObj[nameKey].haircuts = +dataArry[i].haircuts||0;
-			dataObj[nameKey].addons = +dataArry[i].addons||0;
-			dataObj[nameKey].haircare = +dataArry[i].haircare||0;
-			dataObj[nameKey].prepaid = +dataArry[i].prepaid||0;
-			dataObj[nameKey].serviceRev = +dataArry[i].serviceRev||0;
-			dataObj[nameKey].haircareRev = +dataArry[i].haircareRev||0;
-			dataObj[nameKey].otherRetailRev = +dataArry[i].otherRetailRev||0;	
-			dataObj[nameKey].productRev = +dataArry[i].productRev||0;
-			dataObj[nameKey].totalRev = +dataArry[i].totalRev||0;
-	     	dataObj[nameKey].hours = +dataArry[i].hours||0;
-		}
-		else {//existing nameKey
-			dataObj[nameKey].haircuts += +dataArry[i].haircuts||0;
-			dataObj[nameKey].addons += +dataArry[i].addons||0;
-			dataObj[nameKey].haircare += +dataArry[i].haircare||0;
-			dataObj[nameKey].prepaid += +dataArry[i].prepaid||0;
-			dataObj[nameKey].serviceRev += +dataArry[i].serviceRev||0;
-			dataObj[nameKey].haircareRev += +dataArry[i].haircareRev||0;
-			dataObj[nameKey].otherRetailRev += +dataArry[i].otherRetailRev||0;	
-			dataObj[nameKey].productRev += +dataArry[i].productRev||0;
-			dataObj[nameKey].totalRev += +dataArry[i].totalRev||0;
-	     	dataObj[nameKey].hours += +dataArry[i].hours||0; 
-		}
-	}
-	//compute ratios, tips amount and append to the object
-	for (let name in dataObj) {
-		dataObj[name]['retail Ratio'] = (dataObj[name].haircuts / dataObj[name].haircare).toFixed(1);
-		dataObj[name]['addon Ratio'] = (dataObj[name].haircuts / dataObj[name].addons).toFixed(1);
-		dataObj[name]['estimated Tips'] = '$' + (dataObj[name].serviceRev * tip).toFixed(1);
-		dataObj[name].serviceRev = '$' + dataObj[name].serviceRev.toFixed(0);
-		dataObj[name].haircareRev = '$' + dataObj[name].haircareRev.toFixed(0);
-		dataObj[name].otherRetailRev = '$' + dataObj[name].otherRetailRev.toFixed(0);
-		dataObj[name].productRev = '$' + dataObj[name].productRev.toFixed(0);
-		dataObj[name].totalRev = '$' + dataObj[name].totalRev.toFixed(0);
-
-	}
-	return dataObj;
-}
 
 function productivityArray(dataString) {
 	const dataArray = stringToArry.inversedTableArry(dataString);
