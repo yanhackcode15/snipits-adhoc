@@ -4,6 +4,10 @@ const stringToArry = require('../common/stringToArray');
 const getCookie = require('../common/cookie');
 const getPage = require('../common/pageBody');
 const getProductivityContent = require('./filteredContent');
+const dateFormated = require('../common/dateFormat');
+const dateRange = require('../common/dateRange');
+const Collection = require('../../models/collection');
+
 const tip = 0.2066;
 const reportKeys = [
 		 'haircuts', 
@@ -27,10 +31,48 @@ const reportKeys = [
 	     'actualTips',
 	     'additionalHourly',
 	];
+module.exports = (startDate, endDate) => {
+	let dates = dateRange(startDate, endDate); 
+	let results = [];
+	for (let i = 0; i < dates.length; i++) {
+		let singleDay = dates[i];
+		let findPromise = Collection.Productivity.find({date: singleDay})
+			.exec(function(err, docs){
+				if (err) {
+					console.error("error finding data in cache");
+					return null;
+				}
+				else if (docs.length === 0) {
+					return fetchPortal(singleDay, singleDay)
+						.then(dataArry=>{
+							dataArry.forEach(element=>saveToDB(element));
+							return dataArry;
+						});
+				}
+				else {
+					return docs; 
+				}
+			});
+		results.push(findPromise);
+	}
 
-module.exports = (startDate, endDate)=> {
-	const username = 'yan';
-	const password = 'huy95';
+	return Promise.all(results)
+		.then(dataArry=>{
+			if (dataArry.find(element=>element===null) === null) {
+				console.error('something went wrong');
+			}
+			else {
+				let perDayPerStylistArry = [];
+				dataArry.forEach(element=>{element.forEach(ele=>perDayPerStylistArry.push(ele))});
+				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
+				return viewReadyObj;
+			}
+		});
+}
+
+function fetchPortal(startDate, endDate){
+	const username = process.env.PORTAL_ID;
+	const password = process.env.PORTAL_PASSWORD;
 	const ciphers = 'DES-CBC3-SHA';
 	const fromDate = startDate;
 	const toDate = endDate; 
@@ -51,11 +93,139 @@ module.exports = (startDate, endDate)=> {
 	.then(productivityPg => getProductivityContent(productivityPg))
 	.then(productivityTbl => {
 		let prodArry = productivityArray(productivityTbl);
-		const prodObj = productivityObject(prodArry);
-		return prodObj;
-		// console.log(prodObj);
+		let prodObj = productivityObject(prodArry);
+		let newProdArry = [];
+		for (let name in prodObj) {
+			let data = prodObj[name];
+			newProdArry.push({
+				name,
+				date: fromDate,
+				hours: Number(data.hours) || 0,
+				haircuts: Number(data.haircuts) || 0,
+				addons: Number(data.addons) || 0,
+				haircare: Number(data.haircare) || 0,
+				prepaid: Number(data.prepaid) || 0,
+				serviceRev: Number(data.serviceRev) || 0,
+				haircareRev: Number(data.haircareRev) || 0,
+				otherRetailRev: Number(data.otherRetailRev) || 0,
+				productRev: Number(data.productRev) || 0,
+				totalRev: Number(data.totalRev) || 0,
+			});
+		}
+
+		if(newProdArry.length===0) {
+			newProdArry.push({
+				name: 'Yan-Owner Hu',
+				date: fromDate,
+				hours: 0,
+				haircuts: 0,
+				addons: 0,
+				haircare: 0,
+				prepaid: 0,
+				serviceRev: 0,
+				haircareRev: 0,
+				otherRetailRev: 0,
+				productRev: 0,
+				totalRev: 0,
+			});	
+		}
+		return newProdArry;
 	});
 };
+function saveToDB (singleDocument) {
+	let newProd = new Collection.Productivity();
+	newProd.date = singleDocument.date;
+	newProd.name = singleDocument.name;
+	newProd.hours = singleDocument.hours;
+	newProd.haircuts = singleDocument.haircuts;
+	newProd.addons = singleDocument.addons; 
+	newProd.haircare = singleDocument.haircare;
+	newProd.prepaid = singleDocument.prepaid;
+	newProd.serviceRev = singleDocument.serviceRev;
+	newProd.haircareRev = singleDocument.haircareRev;
+	newProd.otherRetailRev = singleDocument.otherRetailRev;
+	newProd.productRev = singleDocument.productRev;
+	newProd.totalRev = singleDocument.totalRev;
+
+	newProd.save(function(err, data){
+		if (err) {
+			console.error('error saving document');
+		}
+	});
+}
+
+function prepareForView(dataArry, headerRow) {
+	//dataArry is in [{name, date, dayOfWeek, hours}]
+	//return {name: {YYYY-MM-DD-MON: 7}, name:{...}}
+	let dataObj = {};
+	let rowTemplate = headerRow.reduce((template, metrix)=>{
+		template[metrix] = 0;
+		return template;
+	}, {});
+	const employeeTemplate = {
+		haircuts: 0,
+		addons: 0,
+		haircare: 0,
+		prepaid: 0,
+		serviceRev: 0,
+		haircareRev: 0,
+		otherRetailRev: 0,
+		productRev: 0,
+		totalRev: 0,
+		hours: 0,
+	};
+	for (let i = 0; i < dataArry.length; i++) { //aggregate table data to show each stylist stats per row
+		let nameKey = dataArry[i].name;  
+		if (!dataObj[nameKey]) { //first time creating nameKey
+			dataObj[nameKey] = Object.assign({}, employeeTemplate);
+		}
+		dataObj[nameKey].haircuts += +dataArry[i].haircuts || 0;
+		dataObj[nameKey].addons += +dataArry[i].addons || 0;
+		dataObj[nameKey].haircare += +dataArry[i].haircare || 0;
+		dataObj[nameKey].prepaid += +dataArry[i].prepaid || 0;
+		dataObj[nameKey].serviceRev += +dataArry[i].serviceRev || 0;
+		dataObj[nameKey].haircareRev += +dataArry[i].haircareRev || 0;
+		dataObj[nameKey].otherRetailRev += +dataArry[i].otherRetailRev || 0;	
+		dataObj[nameKey].productRev += +dataArry[i].productRev || 0;
+		dataObj[nameKey].totalRev += +dataArry[i].totalRev || 0;
+     	dataObj[nameKey].hours += +dataArry[i].hours || 0; 
+	}
+	//compute ratios, tips amount, commissions and append to the object
+	for (let name in dataObj) {
+		dataObj[name]['retail Ratio'] = dataObj[name].haircuts / dataObj[name].haircare
+		dataObj[name]['addon Ratio'] = dataObj[name].haircuts / dataObj[name].addons
+		dataObj[name]['estimated Tips'] = dataObj[name].serviceRev * tip;
+		dataObj[name].otherRetailRev = dataObj[name].productRev - dataObj[name].haircareRev;
+		dataObj[name]['haircare Commission'] = dataObj[name]['retail Ratio'] <= 3.9
+			? (dataObj[name].haircare * 2) : (
+				dataObj[name]['retail Ratio'] <= 5.9 ? dataObj[name].haircare * 1 : (
+					dataObj[name]['retail Ratio'] <= 8.9 ? dataObj[name].haircare * 0.5 : 0
+					));
+		dataObj[name]['addon Commission'] = dataObj[name]['addon Ratio'] <= 5.9
+			? dataObj[name].addons
+			: (dataObj[name]['addon Ratio'] <= 8.9 ? dataObj[name].addons * 0.5 : 0);
+		dataObj[name]['prepaid Commission'] = dataObj[name].prepaid * 5 || 0 ;
+		dataObj[name]['total Commission'] = dataObj[name]['haircare Commission'] + dataObj[name]['addon Commission'] + dataObj[name]['prepaid Commission'];
+		dataObj[name]['additional Hourly'] = (dataObj[name]['total Commission'] + dataObj[name]['estimated Tips']) / dataObj[name].hours;
+	}
+
+	for (let name in dataObj) { //format numbers
+		dataObj[name]['retail Ratio'] = dataObj[name]['retail Ratio'].toFixed(1);
+		dataObj[name]['addon Ratio'] = dataObj[name]['addon Ratio'].toFixed(1);
+		dataObj[name]['estimated Tips'] = '$' + dataObj[name]['estimated Tips'].toFixed(0);
+		dataObj[name].serviceRev = '$' + dataObj[name].serviceRev.toFixed(0);
+		dataObj[name].haircareRev = '$' + dataObj[name].haircareRev.toFixed(0);
+		dataObj[name].productRev = '$' + dataObj[name].productRev.toFixed(0);
+		dataObj[name].totalRev = '$' + dataObj[name].totalRev.toFixed(0);
+		dataObj[name].otherRetailRev = '$' + dataObj[name].otherRetailRev.toFixed(0);
+		dataObj[name]['haircare Commission'] = '$' + dataObj[name]['haircare Commission'].toFixed(0);
+		dataObj[name]['addon Commission'] = '$' + dataObj[name]['addon Commission'].toFixed(0);
+		dataObj[name]['prepaid Commission'] = '$' + dataObj[name]['prepaid Commission'].toFixed(0);
+		dataObj[name]['total Commission'] = '$' + dataObj[name]['total Commission'].toFixed(0);
+		dataObj[name]['additional Hourly'] = '$' + dataObj[name]['additional Hourly'].toFixed(1);
+	}
+	return dataObj;
+}
 
 function productivityArray(dataString) {
 	const dataArray = stringToArry.inversedTableArry(dataString);
@@ -124,69 +294,20 @@ function productivityObject(normalizedArray){
 				break;
 			case 'Hair Care':
 				employee.haircare = numeral(row[5]).value();
-				employee.haircareRev = +numeral(row[7]).value().toFixed(0);
+				employee.haircareRev = +numeral(row[7]).value();
 				break;
 			case 'Services Subtotal':
 				const serRev = employee.serviceRev = numeral(row[7]).value();
-				const reportedTips = numeral(serRev).value() * 0.1;
-				const actualTips = numeral(serRev).value() * tip;
-				employee.reportedTips = +reportedTips.toFixed(0);
-				employee.actualTips = +actualTips.toFixed(0);
 				break;
 			case 'Products Subtotal':
-				employee.productRev = +numeral(row[7]).value().toFixed(0);
+				employee.productRev = +numeral(row[7]).value();
 				break;
 			case 'Total':
-				employee.totalRev = +numeral(row[7]).value().toFixed(0);
-				employee.hours = +numeral(row[1]).value().toFixed(2);
+				employee.totalRev = +numeral(row[7]).value();
+				employee.hours = +numeral(row[1]).value();
 		}
 		return obj;
 	}, {});
-
-	for (let key in dataObj) {
-		const employee = dataObj[key];
-		const otherRetailRev = employee.productRev - employee.haircareRev;
-		employee.otherRetailCommission = otherRetailRev >= 50
-			? otherRetailRev * 0.2
-			: 0;
-		employee.otherRetailRev = otherRetailRev;
-
-		const retailCount = employee.haircare || 0;
-		const addonCount = employee.addons || 0;
-		const retailRat = employee.haircuts / retailCount ;
-		const addonRat = employee.haircuts / addonCount;
-		const haircareComm = retailRat <= 3.9
-			? (retailCount * 2) : (
-				retailRat <= 5.9 ? retailCount * 1 : (
-					retailRat <= 8.9 ? retailCount * 0.5 : 0
-					));
-		const addonComm = addonRat <= 5.9
-			? addonCount
-			: (addonRat <= 8.9 ? addonCount * 0.5 : 0);
-		const prepaidComm = employee.prepaid * 5 || 0 ;
-
-		employee.retailRatio = +retailRat.toFixed(1);
-		employee.addonRatio = +addonRat.toFixed(1);
-		employee.haircareCommission = +haircareComm.toFixed(1);
-		employee.addonCommission = +addonComm.toFixed(1);
-		employee.prepaidCommission = +prepaidComm.toFixed(0);
-		employee.totalCommission = +(employee.haircareCommission + employee.addonCommission + employee.prepaidCommission);
-		employee.additionalHourly = +((employee.totalCommission + employee.actualTips) / employee.hours).toFixed(1);
-	}
-
-	for (let employee in dataObj) {
-		const employeeAttributes = Object.keys(dataObj[employee]);
-		for (let i = 0; i<reportKeys.length; i++)
-		{
-			if (!employeeAttributes.includes(reportKeys[i]))
-			{
-				dataObj[employee][reportKeys[i]] = 0;
-			}
-			else if (isNaN(dataObj[employee][reportKeys[i]])) {
-				dataObj[employee][reportKeys[i]] = 0;
-			}	
-		}
-	}
 	return dataObj;
 }
 
