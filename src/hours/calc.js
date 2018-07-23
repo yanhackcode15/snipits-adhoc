@@ -9,14 +9,14 @@ const dateRange1 = require('../common/dateRange');
 
 
 module.exports = (startDate, endDate) => {
-	var dates = dateRange1(startDate, endDate); 
-	var results = [];
+	let dates = dateRange1(startDate, endDate); 
+	let results = [];
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.Hour.find({date: singleDay})
 			.exec(function(err, docs){
 				if (err) {
-					console.log("error finding data in cache");
+					console.error("error finding data in cache");
 					return null;
 				}
 				else if (docs.length === 0) {
@@ -36,13 +36,12 @@ module.exports = (startDate, endDate) => {
 	return Promise.all(results)
 		.then(dataArry=>{
 			if (dataArry.find(element=>element===null) === null) {
-				console.log('something went wrong');
+				console.error('something went wrong');
 			}
 			else {
 				let perDayPerStylistArry = [];
 				dataArry.map(element=>{element.map(ele=>perDayPerStylistArry.push(ele))});
 				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
-				console.log('agaewhwhwrhrehreahrwa',viewReadyObj);
 				return hoursComputed(viewReadyObj);
 			}
 		});
@@ -76,26 +75,18 @@ function prepareForView(dataArry, headerRow) {
 }
 
 function fillDates(rowObj, rowTemplate) {
-	// rowObjKeys = Object.keys(rowObj);
-	// fillerRow.forEach(date=>{
-	// 	if(rowObjKeys.find(date) < 0) {rowObj[date] = 0}
-	// });
 	return Object.assign({}, rowTemplate, rowObj);
-
 }	
 
 function saveToDB (singleDocument) {
-	var newHour = new Collection.Hour();
+	let newHour = new Collection.Hour();
 	newHour.date = singleDocument.date;
 	newHour.dayOfWeek = singleDocument.dayOfWeek;
 	newHour.name = singleDocument.name;
 	newHour.hours = singleDocument.hours;
 	newHour.save(function(err, data){
 		if (err) {
-			console.log('error saving document');
-		}
-		else {
-			console.log('saved one hour doc', data);
+			console.error('error saving document');
 		}
 	});
 }
@@ -142,9 +133,6 @@ function fetchPortal(startDate, endDate) {
 }
 
 function hoursComputed(empHrsObj) {
-	//Output example: 
-	//.txt file and an obj {'miriam': {'regular': 50, 'overtime': 3}}
-	//file: name '[startdate]_[enddate].txt' | content 'miriam, 50, 3' 
 	let regularTotal = 0; 
 	let overtimeTotal =0;
 	let totalTotal = 0;
@@ -188,13 +176,13 @@ function arryToObj(tableString) {
 	hrsInversedTbl = stringToArry.removeCol(hrsInversedTbl, [0, 1, -1, -2, -3, -4]);
 	let hrsTble = stringToArry.flipAxis(hrsInversedTbl);
 
-    var headerRow = hrsTble.shift();
+    let headerRow = hrsTble.shift();
     //clean headerRow values with reformat date values
     headerRow = headerRow.map(dateFormated);
     hrsTble.shift(); //--> remove the empty row, the horizontal line in the markup
     headerRow.shift(); //->remove the first element 'employee' so the entire array consists of the dates element. i.e. oct has 31 elements with each has the date value
     const employeesObj = {};
-    for (var i = 0; i < hrsTble.length; i++) {
+    for (let i = 0; i < hrsTble.length; i++) {
         for (let j = 0; j<hrsTble[i].length - 1; j++) {
             if (j === 0) {
                 employeesObj[hrsTble[i][0]] = {};

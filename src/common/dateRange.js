@@ -2,18 +2,18 @@
 
 module.exports = (fromDate, toDate) =>{
 	//return all dates as an array ['2018-06-12', '2018-06-13'...]
-	var fromArr = fromDate.split('-'); //[2018, 6, 12]
-	var fromYear = fromArr[0];
-	var fromMonth = fromArr[1];
-	var fromDay = fromArr[2];
-	var fromDateObj = new Date(fromYear, fromMonth-1, fromDay);
-	var toArr = toDate.split('-'); //[2018, 7, 12]
-	var toYear = toArr[0];
-	var toMonth = toArr[1];
-	var toDay = toArr[2];
-	var toDateObj = new Date(toYear, toMonth-1, toDay);
-	var days = daysBetween(fromDateObj, toDateObj) + 1;
-	var range = [];
+	let fromArr = fromDate.split('-'); //[2018, 6, 12]
+	let fromYear = fromArr[0];
+	let fromMonth = fromArr[1];
+	let fromDay = fromArr[2];
+	let fromDateObj = new Date(fromYear, fromMonth-1, fromDay);
+	let toArr = toDate.split('-'); //[2018, 7, 12]
+	let toYear = toArr[0];
+	let toMonth = toArr[1];
+	let toDay = toArr[2];
+	let toDateObj = new Date(toYear, toMonth-1, toDay);
+	let days = daysBetween(fromDateObj, toDateObj) + 1;
+	let range = [];
 	for (let i = 0; i < days; i++) {
 		let thisDay = new Date(fromYear, fromMonth-1, fromDay-0+i);
 		range.push(thisDay);

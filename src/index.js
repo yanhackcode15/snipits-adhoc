@@ -6,13 +6,11 @@ module.exports = (fromDate, toDate) => {
 	return Promise.all([hoursCalc(fromDate, toDate), productivityCalc(fromDate, toDate)])
 		.then(dataArry=>{
 			var hoursData = dataArry[0];
-			console.log('hoursData', hoursData);
 			var prodData = dataArry[1];
 			let allStats = {};
 			for (let key in hoursData) {
 				allStats[key] = Object.assign(hoursData[key], prodData[key]);
 			}
-			console.log("all stats",allStats);
 			return allStats;
 		})
 }

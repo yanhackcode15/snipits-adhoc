@@ -1,34 +1,31 @@
-var express = require('express');
-var router = express.Router();
-var getStats = require('../src/index');
-var getPayDatePair = require('../src/common/getStartEndDates'); //a function returning an ojbect with key fromDate and toDate; 
+const express = require('express');
+const router = express.Router();
+const getStats = require('../src/index');
+const getPayDatePair = require('../src/common/getStartEndDates'); //a function returning an ojbect with key fromDate and toDate; 
 
 router.get('/', function(req, res, next){
 	res.render('indexPage', {});
 });
 
 router.post('/viewHours', function(req, res, next){
-	var year = parseInt(req.body.year, 10);
-	var month = parseInt(req.body.month, 10);
-	var pairs = getPayDatePair.startEndDates(month, year);
+	let year = parseInt(req.body.year, 10);
+	let month = parseInt(req.body.month, 10);
+	let pairs = getPayDatePair.startEndDates(month, year);
 	res.render('monthPage', {dates: pairs});
 });
 
 router.get('/viewPay/:fromDate/:toDate', function(req, res, next) {
-	var fromDate = req.params.fromDate;
-	var toDate = req.params.toDate;
-	console.log(fromDate);
-	console.log(toDate);
+	let fromDate = req.params.fromDate;
+	let toDate = req.params.toDate;
 	getStats(fromDate, toDate)
 		.then(results=>{
-			console.log(results);
 			res.render('recentPage', {output: results});
 		});
 });
 
 router.get('/recent', function(req, res, next){
-	var fromDate = getPayDatePair.recentStartEndDates().fromDate;
-	var toDate = getPayDatePair.recentStartEndDates().toDate;
+	let fromDate = getPayDatePair.recentStartEndDates().fromDate;
+	let toDate = getPayDatePair.recentStartEndDates().toDate;
 	getStats(fromDate, toDate)
 		.then(results=>{
 			res.render('recentPage', {output: results});
