@@ -7,8 +7,11 @@ module.exports = (fromDate, toDate) => {
 		.then(dataArry=>{
 			var hoursData = dataArry[0];
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> using mongo db as cache and fetch from portal if db record not exist't
+=======
+>>>>>>> code review comments addressed
 			var prodData = dataArry[1];
 			let allStats = {};
 			for (let key in hoursData) {

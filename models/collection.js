@@ -6,7 +6,7 @@ mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 //Get the default connection
 const db = mongoose.connection;
-//using mongo db as cache and fetch from portal if db record not exist't
+//code review comments addressed
 
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
