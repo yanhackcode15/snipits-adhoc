@@ -12,5 +12,5 @@ module.exports = (fromDate, toDate) => {
 				allStats[key] = Object.assign(hoursData[key], prodData[key]);
 			}
 			return allStats;
-		})
+		});
 }

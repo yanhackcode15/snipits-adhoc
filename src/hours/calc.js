@@ -22,7 +22,7 @@ module.exports = (startDate, endDate) => {
 				else if (docs.length === 0) {
 					return fetchPortal(singleDay, singleDay)
 						.then(dataArry=>{
-							dataArry.map(element=>saveToDB(element));
+							dataArry.forEach(element=>saveToDB(element));
 							return dataArry;
 						});
 				}
@@ -40,7 +40,7 @@ module.exports = (startDate, endDate) => {
 			}
 			else {
 				let perDayPerStylistArry = [];
-				dataArry.map(element=>{element.map(ele=>perDayPerStylistArry.push(ele))});
+				dataArry.forEach(element=>{element.forEach(ele=>perDayPerStylistArry.push(ele))});
 				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
 				return hoursComputed(viewReadyObj);
 			}
@@ -67,7 +67,7 @@ function prepareForView(dataArry, headerRow) {
 			dataObj[nameKey][dateKey] = dataArry[i].hours; 
 		}
 	}
-	let filledDataObj = {};
+	const filledDataObj = {};
 	for (let employee in dataObj) {
 		filledDataObj[employee] = fillDates(dataObj[employee], rowTemplate);
 	}
@@ -92,8 +92,8 @@ function saveToDB (singleDocument) {
 }
 function fetchPortal(startDate, endDate) { 
 	// return an array [] of {name:, date:, hours:,}
-	const username = 'yan';
-	const password = 'huy95';
+	const username = process.env.PORTAL_ID;
+	const password = process.env.PORTAL_PASSWORD;
 	const ciphers = 'DES-CBC3-SHA';
 
 	const fromDate = startDate;
@@ -119,9 +119,8 @@ function fetchPortal(startDate, endDate) {
 		let hoursArry = [];
 		for (let name in hoursWorked) {
 			let myHours = hoursWorked[name];
-			for (let rawDate in myHours) {
-				let hours = Number(myHours[rawDate]);
-				let date = rawDate.substring(0, 10); //'YYYYMM-DD'
+			for (let date in myHours) {
+				const hours = +myHours[date];
 				hoursArry.push({name, date, hours});
 			}
 		}

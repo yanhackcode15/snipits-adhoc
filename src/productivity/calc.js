@@ -45,7 +45,7 @@ module.exports = (startDate, endDate) => {
 				else if (docs.length === 0) {
 					return fetchPortal(singleDay, singleDay)
 						.then(dataArry=>{
-							dataArry.map(element=>saveToDB(element));
+							dataArry.forEach(element=>saveToDB(element));
 							return dataArry;
 						});
 				}
@@ -71,8 +71,8 @@ module.exports = (startDate, endDate) => {
 }
 
 function fetchPortal(startDate, endDate){
-	const username = 'yan';
-	const password = 'huy95';
+	const username = process.env.PORTAL_ID;
+	const password = process.env.PORTAL_PASSWORD;
 	const ciphers = 'DES-CBC3-SHA';
 	const fromDate = startDate;
 	const toDate = endDate; 
@@ -100,16 +100,16 @@ function fetchPortal(startDate, endDate){
 			newProdArry.push({
 				name,
 				date: fromDate,
-				hours: Number(data.hours)||0,
-				haircuts: Number(data.haircuts)||0,
-				addons: Number(data.addons)||0,
-				haircare: Number(data.haircare)||0,
-				prepaid: Number(data.prepaid)||0,
-				serviceRev: Number(data.serviceRev)||0,
-				haircareRev: Number(data.haircareRev)||0,
-				otherRetailRev: Number(data.otherRetailRev)||0,
-				productRev: Number(data.productRev)||0,
-				totalRev: Number(data.totalRev)||0,
+				hours: Number(data.hours) || 0,
+				haircuts: Number(data.haircuts) || 0,
+				addons: Number(data.addons) || 0,
+				haircare: Number(data.haircare) || 0,
+				prepaid: Number(data.prepaid) || 0,
+				serviceRev: Number(data.serviceRev) || 0,
+				haircareRev: Number(data.haircareRev) || 0,
+				otherRetailRev: Number(data.otherRetailRev) || 0,
+				productRev: Number(data.productRev) || 0,
+				totalRev: Number(data.totalRev) || 0,
 			});
 		}
 
@@ -162,36 +162,35 @@ function prepareForView(dataArry, headerRow) {
 		template[metrix] = 0;
 		return template;
 	}, {});
-	for (let i = 0; i < dataArry.length; i++) {
-		let employee = {};
+	const employeeTemplate = {
+		haircuts: 0,
+		addons: 0,
+		haircare: 0,
+		prepaid: 0,
+		serviceRev: 0,
+		haircareRev: 0,
+		otherRetailRev: 0,
+		productRev: 0,
+		totalRev: 0,
+		hours: 0,
+	};
+	for (let i = 0; i < dataArry.length; i++) { //aggregate table data to show each stylist stats per row
 		let nameKey = dataArry[i].name;  
 		if (!dataObj[nameKey]) { //first time creating nameKey
-			dataObj[nameKey] = employee;
-			dataObj[nameKey].haircuts = +dataArry[i].haircuts||0;
-			dataObj[nameKey].addons = +dataArry[i].addons||0;
-			dataObj[nameKey].haircare = +dataArry[i].haircare||0;
-			dataObj[nameKey].prepaid = +dataArry[i].prepaid||0;
-			dataObj[nameKey].serviceRev = +dataArry[i].serviceRev||0;
-			dataObj[nameKey].haircareRev = +dataArry[i].haircareRev||0;
-			dataObj[nameKey].otherRetailRev = +dataArry[i].otherRetailRev||0;	
-			dataObj[nameKey].productRev = +dataArry[i].productRev||0;
-			dataObj[nameKey].totalRev = +dataArry[i].totalRev||0;
-	     	dataObj[nameKey].hours = +dataArry[i].hours||0;
+			dataObj[nameKey] = Object.assign({}, employeeTemplate);
 		}
-		else {//existing nameKey
-			dataObj[nameKey].haircuts += +dataArry[i].haircuts||0;
-			dataObj[nameKey].addons += +dataArry[i].addons||0;
-			dataObj[nameKey].haircare += +dataArry[i].haircare||0;
-			dataObj[nameKey].prepaid += +dataArry[i].prepaid||0;
-			dataObj[nameKey].serviceRev += +dataArry[i].serviceRev||0;
-			dataObj[nameKey].haircareRev += +dataArry[i].haircareRev||0;
-			dataObj[nameKey].otherRetailRev += +dataArry[i].otherRetailRev||0;	
-			dataObj[nameKey].productRev += +dataArry[i].productRev||0;
-			dataObj[nameKey].totalRev += +dataArry[i].totalRev||0;
-	     	dataObj[nameKey].hours += +dataArry[i].hours||0; 
-		}
+		dataObj[nameKey].haircuts += +dataArry[i].haircuts || 0;
+		dataObj[nameKey].addons += +dataArry[i].addons || 0;
+		dataObj[nameKey].haircare += +dataArry[i].haircare || 0;
+		dataObj[nameKey].prepaid += +dataArry[i].prepaid || 0;
+		dataObj[nameKey].serviceRev += +dataArry[i].serviceRev || 0;
+		dataObj[nameKey].haircareRev += +dataArry[i].haircareRev || 0;
+		dataObj[nameKey].otherRetailRev += +dataArry[i].otherRetailRev || 0;	
+		dataObj[nameKey].productRev += +dataArry[i].productRev || 0;
+		dataObj[nameKey].totalRev += +dataArry[i].totalRev || 0;
+     	dataObj[nameKey].hours += +dataArry[i].hours || 0; 
 	}
-	//compute ratios, tips amount and append to the object
+	//compute ratios, tips amount, commissions and append to the object
 	for (let name in dataObj) {
 		dataObj[name]['retail Ratio'] = dataObj[name].haircuts / dataObj[name].haircare
 		dataObj[name]['addon Ratio'] = dataObj[name].haircuts / dataObj[name].addons
