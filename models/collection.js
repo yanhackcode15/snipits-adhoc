@@ -13,7 +13,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const Schema = mongoose.Schema;
 const hourSchema = new Schema({
 	date: String,
-	dayOfWeek: String,
 	name: String, 
 	hours: String, 
 });

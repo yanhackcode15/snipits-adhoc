@@ -17,11 +17,8 @@ router.post('/viewHours', function(req, res, next){
 router.get('/viewPay/:fromDate/:toDate', function(req, res, next) {
 	var fromDate = req.params.fromDate;
 	var toDate = req.params.toDate;
-	console.log(fromDate);
-	console.log(toDate);
 	getStats(fromDate, toDate)
 		.then(results=>{
-			console.log(results);
 			res.render('recentPageAdmin', {output: results});
 		});
 });
