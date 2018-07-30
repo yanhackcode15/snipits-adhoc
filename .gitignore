@@ -3,7 +3,7 @@ data/
 *.DS_Store
 
 #PhoneNumbers
-src/teamNumbers.js
+teamNumbers.json
 
 # keys
 serviceAccountKey.json
