@@ -34,8 +34,6 @@ const reportKeys = [
 module.exports = (startDate, endDate) => {
 	let dates = dateRange(startDate, endDate); 
 	let results = [];
-	let dates = dateRange(startDate, endDate); 
-	let results = [];
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.Productivity.find({date: singleDay})

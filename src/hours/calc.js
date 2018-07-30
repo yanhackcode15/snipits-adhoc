@@ -11,8 +11,6 @@ const dateRange1 = require('../common/dateRange');
 module.exports = (startDate, endDate) => {
 	let dates = dateRange1(startDate, endDate); 
 	let results = [];
-	let dates = dateRange1(startDate, endDate); 
-	let results = [];
 //code review comments addressed
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
@@ -175,7 +173,6 @@ function arryToObj(tableString) {
 	let hrsInversedTbl = stringToArry.inversedTableArry(tableString);
 	hrsInversedTbl = stringToArry.removeCol(hrsInversedTbl, [0, 1, -1, -2, -3, -4]);
 	let hrsTble = stringToArry.flipAxis(hrsInversedTbl);
-    let headerRow = hrsTble.shift();
     let headerRow = hrsTble.shift();
     //clean headerRow values with reformat date values
     headerRow = headerRow.map(dateFormated);
