@@ -52,7 +52,6 @@ router.get('/sendAlerts', function(req, res, next){
 		.then(allStats=>{
 			phoneNumbers()
 				.then((numberTable)=>{
-					console.log('number table', numberTable);
 					for (let employee in allStats) {
 						let retailRatio = +(allStats[employee]['retail Ratio']);
 						let addonRatio = +(allStats[employee]['addon Ratio']);
@@ -76,13 +75,9 @@ router.get('/sendAlerts', function(req, res, next){
 
 						let messageAll = messagePart1 + messagePart2;
 						let toNum = numberTable[employee];
-						console.log('toNum', toNum);
 						if (toNum) {
 							promiseArry.push(sendOne(fromNum, toNum, messageAll));
 						}
-						console.log('length', promiseArry.length);
-						console.log('promise array', promiseArry);
-
 					}
 					return Promise.all(promiseArry)
 						.then(results=>{
