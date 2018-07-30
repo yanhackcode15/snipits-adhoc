@@ -2,6 +2,9 @@
 data/
 *.DS_Store
 
+#PhoneNumbers
+src/teamNumbers.js
+
 # keys
 serviceAccountKey.json
 

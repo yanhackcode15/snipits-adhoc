@@ -11,6 +11,7 @@ const dateRange1 = require('../common/dateRange');
 module.exports = (startDate, endDate) => {
 	let dates = dateRange1(startDate, endDate); 
 	let results = [];
+//code review comments addressed
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.Hour.find({date: singleDay})
@@ -95,10 +96,8 @@ function fetchPortal(startDate, endDate) {
 	const username = process.env.PORTAL_ID;
 	const password = process.env.PORTAL_PASSWORD;
 	const ciphers = 'DES-CBC3-SHA';
-
 	const fromDate = startDate;
 	const toDate = endDate; 
-
 	const formData = {
 		break_out_by_week:'Y',
 		round_hours:'N',
@@ -174,7 +173,6 @@ function arryToObj(tableString) {
 	let hrsInversedTbl = stringToArry.inversedTableArry(tableString);
 	hrsInversedTbl = stringToArry.removeCol(hrsInversedTbl, [0, 1, -1, -2, -3, -4]);
 	let hrsTble = stringToArry.flipAxis(hrsInversedTbl);
-
     let headerRow = hrsTble.shift();
     //clean headerRow values with reformat date values
     headerRow = headerRow.map(dateFormated);

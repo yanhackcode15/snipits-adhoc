@@ -6,6 +6,7 @@ mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 //Get the default connection
 const db = mongoose.connection;
+//code review comments addressed
 
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -34,5 +35,16 @@ const prodSchema = new Schema({
 	actualTips: String,
 });
 
+const phoneNumbersSchema = new Schema ({
+	'Yvonne-Manager Perez': String,
+	'Sydney Ladage': String,
+	'Antonia Rodriguez':  String,
+	'Judith Quesada': String,
+	'Miriam-Stylist Hernandez': String,
+	'Erica-stylist Jimenez': String,
+	'Hui Zhang': String,
+})
+
 exports.Productivity = mongoose.model('Productivity', prodSchema);
 exports.Hour = mongoose.model('Hour', hourSchema);
+exports.PhoneNumber = mongoose.model('PhoneNumber', phoneNumbersSchema);

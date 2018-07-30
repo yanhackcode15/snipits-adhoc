@@ -11,6 +11,7 @@ module.exports = (fromDate, toDate) => {
 			for (let key in hoursData) {
 				allStats[key] = Object.assign(hoursData[key], prodData[key]);
 			}
+			console.log(allStats);
 			return allStats;
 		});
 }
