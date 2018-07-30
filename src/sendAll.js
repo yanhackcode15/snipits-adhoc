@@ -1,11 +1,25 @@
-const send = require('test');
-const records = require('teamrecords');
-const fromNum = '14245328717';
-const messageTemplate = `Dear ${name}, your ratio from last week is: .`;
+const getStats = require('./index');
+const sendOne = require('./sendOne');
+const phoneNumbers = require('./teamNumbers');
+const fromNum = process.env.TWILIO_PHONE;
 
+const promiseArry = [];
+getStats('2018-07-02', '2018-07-15')
+	.then(allStats=>{
+		for (let employee in allStats) {
+			let retailRatio = allStats[employee]. ;
+			let addonRatio = allStats[employee]. ;
+			let messageTemplate = `Dear ${employee}, see your ratio report from last week below.  Retail Ratio: 1 in ${retailRatio}; Addon Ratio: 1 in ${addonRatio}`;
+			let toNum = phoneNumbers[employee];
+			if (toNum) {
+				promiseArry.push(sendOne(fromNum, toNum, messageTemplate));
+			}
+		}
 
-const promiseArry = records.map(record=>{
-	return send(fromNum, record.number, combinedRecords.body);
-});
+	});
 Promise.all(promiseArry)
-	.then()
+	.then(results=>{
+		console.log('all done');
+	});
+
+
