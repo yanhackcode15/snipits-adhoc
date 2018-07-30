@@ -35,5 +35,16 @@ const prodSchema = new Schema({
 	actualTips: String,
 });
 
+const phoneNumbersSchema = new Schema ({
+	'Yvonne-Manager Perez': String,
+	'Sydney Ladage': String,
+	'Antonia Rodriguez':  String,
+	'Judith Quesada': String,
+	'Miriam-Stylist Hernandez': String,
+	'Erica-stylist Jimenez': String,
+	'Hui Zhang': String,
+})
+
 exports.Productivity = mongoose.model('Productivity', prodSchema);
 exports.Hour = mongoose.model('Hour', hourSchema);
+exports.PhoneNumber = mongoose.model('PhoneNumber', phoneNumbersSchema);
