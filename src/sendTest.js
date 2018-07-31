@@ -1,5 +1,5 @@
 const getStats = require('./index');
-const phoneNumbers = require('./getPhoneNumbers'); //it's a promise to return the numbers doc as a single doc
+const testNumbers = require('./getTestNumbers'); //it's a promise to return the numbers doc as a single doc
 const sendOne = require('./sendOne');
 
 const employeNames = {
@@ -16,7 +16,7 @@ const fromNum = process.env.TWILIO_PHONE;
 module.exports = function (fromDate, toDate) {
 	return getStats(fromDate, toDate)
 		.then(allStats=>{
-			return phoneNumbers()
+			return testNumbers()
 				.then((numberTable)=>{
 					const promiseArry = [];
 					for (let employee in allStats) {
@@ -48,7 +48,7 @@ module.exports = function (fromDate, toDate) {
 					}
 					return Promise.all(promiseArry)
 						.then(results=>{
-							return true;
+						return true;
 						});
 				});
 		});
