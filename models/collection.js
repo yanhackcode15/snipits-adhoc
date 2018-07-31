@@ -48,3 +48,5 @@ const phoneNumbersSchema = new Schema ({
 exports.Productivity = mongoose.model('Productivity', prodSchema);
 exports.Hour = mongoose.model('Hour', hourSchema);
 exports.PhoneNumber = mongoose.model('PhoneNumber', phoneNumbersSchema);
+exports.TestNumber = mongoose.model('TestNumber', phoneNumbersSchema);
+
