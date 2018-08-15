@@ -37,3 +37,31 @@
 td {
 	text-align: center;
 }
+
+.table > thead > tr > th:first-child.nofix {
+    display: inline-block;
+    position: static !important;
+    width: 200px;
+    background-color: #212529;
+    height: 100% !important;
+    /*height: 56px;*/
+}
+.table > tbody > tr > th:first-child.nofix {
+    display: inline-block;
+    position: static !important;
+    width: 200px;
+    background-color: white;
+    /*height: 100%;*/
+}
+
+.table > thead > tr > th:nth-child(2).nofix {
+    padding-left: 0px !important;
+}
+
+.table > tbody > tr > td:nth-child(2).nofix {
+    padding-left: 0px !important;
+    text-align: center !important;
+}
+.table > thead > tr.nofix {
+    height: 38px !important;
+}

@@ -43,10 +43,18 @@ const phoneNumbersSchema = new Schema ({
 	'Miriam-Stylist Hernandez': String,
 	'Erica-stylist Jimenez': String,
 	'Hui Zhang': String,
-})
+});
+
+const storeRankingSchema = new Schema ({
+	storeName: String,
+	date: String,
+	haircutCount: String,
+	rank: String,
+});
 
 exports.Productivity = mongoose.model('Productivity', prodSchema);
 exports.Hour = mongoose.model('Hour', hourSchema);
 exports.PhoneNumber = mongoose.model('PhoneNumber', phoneNumbersSchema);
 exports.TestNumber = mongoose.model('TestNumber', phoneNumbersSchema);
+exports.StoreRanking = mongoose.model('StoreRanking', storeRankingSchema);
 

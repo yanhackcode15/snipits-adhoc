@@ -22,7 +22,7 @@ module.exports = function (fromDate, toDate) {
 					for (let employee in allStats) {
 						let retailRatio = +(allStats[employee]['retail Ratio']);
 						let addonRatio = +(allStats[employee]['addon Ratio']);
-						let messagePart1 = `Dear ${employeNames[employee]}, see your ratio report from last two weeks below.  Retail Ratio: 1 in ${retailRatio}; Addon Ratio: 1 in ${addonRatio}. `;
+						let messagePart1 = `Dear ${employeNames[employee]}, see your ratio report from ${fromDate} to ${toDate} below.  Retail Ratio: 1 in ${retailRatio}; Addon Ratio: 1 in ${addonRatio}. `;
 						let messagePart2 = '';
 						if (retailRatio <= 5.9 && addonRatio <= 5.9) {
 							messagePart2 = 'You are a rockstar - nailed both ratios! Sky is the limit. 😍';
