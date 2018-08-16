@@ -57,15 +57,6 @@ router.get('/monthlyCommissionAlerts/:fromDate/:toDate', function(req, res, next
 		});
 });
 
-router.get('/testAlerts', function(req, res, next){
-	let fromDate = getPayDatePair.recentStartEndDates().fromDate;
-	let toDate = getPayDatePair.recentStartEndDates().toDate;
-	sendTest(fromDate, toDate)
-		.then(result=>{
-			res.send('all done');
-		});
-});
-
 router.get('/TestCommissionAlerts/:fromDate/:toDate', function(req, res, next){
 	let fromDate = req.params.fromDate;
 	let toDate = req.params.toDate;
@@ -74,7 +65,6 @@ router.get('/TestCommissionAlerts/:fromDate/:toDate', function(req, res, next){
 			res.send('all done');
 		});
 });
-
 
 
 router.get('/testRankings', function(req, res, next){
