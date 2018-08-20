@@ -31,7 +31,7 @@ module.exports = function (fromDate, toDate) {
 							messagePart2 = 'Way to move those products! 😁';
 						}
 						else if (addonRatio <= 5.9){
-							messagePart2 = 'Kids thank you for those add-ons! 😘 Remember the commission cut off is 1 to 5.9 for product ratio';
+							messagePart2 = 'Kids thank you for those add-ons! 😘 Remember the commission cut off is 1 to 5.9 for product ratio.';
 						}
 						else if (retailRatio <= 8.9 && addonRatio <= 8.9){
 							messagePart2 = 'hey keep trying. You can still catch up on ratios next week. 😎';

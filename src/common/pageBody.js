@@ -4,7 +4,6 @@ const request = require('request-promise');
 const contentFilters = require('../common/filters');
 
 module.exports = (cookie, uri, formData, ciphers)=> {
-	console.log('agegwaegwege');
 	return request({	
 			method: 'POST',
 			uri,

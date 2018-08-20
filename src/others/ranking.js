@@ -7,9 +7,11 @@ const getRankingsContent = require('./filteredContent');
 const dateFormated = require('../common/dateFormat');
 const dateRange = require('../common/dateRange');
 const Collection = require('../../models/collection');
+const endDateOrYesterday = require('../common/endDateOrYesterday');
 
 module.exports = (startDate, endDate) => {
-	let dates = dateRange(startDate, endDate); 
+	let endDateAdjusted = endDateOrYesterday(endDate);
+	let dates = dateRange(startDate, endDateAdjusted); 
 	let results = [];
 	console.log(dates);
 	for (let i = 0; i < dates.length; i++) {

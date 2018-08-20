@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-
+const cron = require("node-cron");
 var app = require('../app');
 var debug = require('debug')('yandothu:server');
 var http = require('http');
@@ -28,6 +28,12 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+
+cron.schedule("59 23 * * *", function() {
+  console.log("running a task every day 11:59pm");
+  
+});
 
 /**
  * Normalize a port into a number, string, or false.

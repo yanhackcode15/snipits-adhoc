@@ -6,10 +6,11 @@ const dateFormated = require('../common/dateFormat');
 const getHoursContent = require('./filteredContent');
 const Collection = require('../../models/collection');
 const dateRange1 = require('../common/dateRange');
-
+const endDateOrYesterday = require('../common/endDateOrYesterday');
 
 module.exports = (startDate, endDate) => {
-	let dates = dateRange1(startDate, endDate); 
+	let endDateAdjusted = endDateOrYesterday(endDate);
+	let dates = dateRange1(startDate, endDateAdjusted); 
 	let results = [];
 //code review comments addressed
 	for (let i = 0; i < dates.length; i++) {
