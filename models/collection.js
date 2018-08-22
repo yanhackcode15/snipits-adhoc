@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 //Set up default mongoose connection
 const mongoDB = `mongodb://${process.env.MONGO_ID}:${process.env.MONGO_PASSWORD}@ds141621.mlab.com:41621/snipits`;
-mongoose.connect(mongoDB);
+
+var options = {
+  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+  replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
+};
+
+mongoose.connect(mongoDB, options);
 // Get Mongoose to use the global promise library
 mongoose.Promise = global.Promise;
 //Get the default connection

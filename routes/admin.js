@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const getStats = require('../src/index');
-const removeRanking = require('../src/others/remove');
+const removeRanking = require('../src/others/removeRanking');
 const removeHour = require('../src/others/removeHour');
 const removeProductivity = require('../src/others/removeProductivity');
 const getPayDatePair = require('../src/common/getStartEndDates'); //a function returning an ojbect with key fromDate and toDate; 
@@ -91,11 +91,12 @@ router.post('/viewRanks', function(req, res, next){
 	
 	let fromDate = year + '-' + req.body.month + '-' + '01';
 	let	toDate = year + '-' + req.body.month + '-' + days;
-	// let fromDate = '2018-03-30';
-	// let toDate = '2018-03-31';
+	// let fromDate = '2018-08-19';
+	// let toDate = '2018-08-21';
 	getRankings(fromDate, toDate)
 		.then(results=>{
 			console.log('getRankings result', results);
+			// res.send(results);
 			res.render('monthPageRanksAdmin', {output: results});
 		})
 		.catch(err=>{

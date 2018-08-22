@@ -80,9 +80,9 @@ function fetchPortal(startDate, endDate){
 		run: 'Run',
 	};
 
-	return getCookie(username, password, 'https://portal.snipits.com/login.cfm', ciphers)
+	return getCookie(username, password, 'http://portal.snipits.com/login.cfm', ciphers)
 	.then(cookie => {
-		console.log('yanyanyan');
+		console.log('yanyanyan', cookie);
 		return getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=Rankings', formData, ciphers);
 	})
 	.then(rankingsPg => {
