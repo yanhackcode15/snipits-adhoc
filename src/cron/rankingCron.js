@@ -10,11 +10,8 @@ module.exports = ()=>{
 	getRankings(fromDate, toDate)
 		.then(results=>{
 			console.log('getRankings result', results);
-			// res.send(results);
-			// res.render('monthPageRanksAdmin', {output: results});
 		})
 		.catch(err=>{
 			console.error('get rankings error', err.message);
-			// res.send('error getting rankings data');
 		});
 }

@@ -10,7 +10,7 @@ module.exports = (username, password, url, ciphers)=>{
             },
             resolveWithFullResponse: true,
             simple: false,
-            // ciphers, // Required for the IIS server to not simply end the connection
+            ciphers, // Required for the IIS server to not simply end the connection
         })
         .then(response => {
             const cookies = response.headers['set-cookie'];
@@ -18,7 +18,6 @@ module.exports = (username, password, url, ciphers)=>{
             const CFID = cookies.find((cookie) => ~cookie.indexOf('CFID')).split(';')[0].split('=')[1];
             const CFTOKEN = cookies.find((cookie) => ~cookie.indexOf('CFTOKEN')).split(';')[0].split('=')[1];
             const cookieString = `CFID=${CFID}; CFTOKEN=${CFTOKEN}`;
-            console.log(cookieString);
             return cookieString;
         })
         .catch(err => {

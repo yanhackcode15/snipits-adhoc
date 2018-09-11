@@ -8,7 +8,7 @@ const cheerio = require('cheerio');
 const cheerioTableparser = require('cheerio-tableparser');
 const request = require('request-promise');
 const fs = require('fs');
-const utilities = require('./utilities.js');
+const getCookies = require('./common/cookie');
 const username = 'yan';
 const password = 'huy95';
 const salesDetailsUrl = 'https://portal.snipits.com/runreport.cfm?name=SalesDetails';
@@ -55,6 +55,7 @@ for (var k = i; k <= j; k++) {
 Promise.all(dateArry.map(singleDayReport)).then(
 	()=>{
 		console.log('all done');
+		firebase.app().delete().then(()=>console.log('fire app deleted'));
 	});
 
 
@@ -67,7 +68,7 @@ function singleDayReport(oneDate) {
 		output_as:'html',
 		run:'Run',
 	};
-	return utilities.getCookies()
+	return getCookies(username, password, 'https://portal.snipits.com/login.cfm', 'DES-CBC3-SHA')
 	.then(cookiestring=>{
 		return request({	
 			method: 'POST',
@@ -86,9 +87,16 @@ function singleDayReport(oneDate) {
 	.then(body=>{
 		let tableString = tableFilter(body);
 		let transactions = tranxArry(tableString, oneDate);
-		Promise.all(transactions.map(sendToFire)) //return promises
+		return Promise.all(transactions.map(sendToFire)) //return promises
 			.then(()=>{
-					firebase.app().delete().then(()=>{console.log('done')})
+					// return firebase.app().delete().then(()=>{
+						console.log('done');
+						return true;
+					// });
+			})
+			.catch(err=>{
+				console.log('error saving transactions', err.message);
+            	return Promise.reject(err);
 			}); 
 	});
 }

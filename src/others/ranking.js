@@ -13,7 +13,6 @@ module.exports = (startDate, endDate) => {
 	let endDateAdjusted = endDateOrYesterday(endDate);
 	let dates = dateRange(startDate, endDateAdjusted); 
 	let results = [];
-	console.log(dates);
 	for (let i = 0; i < dates.length; i++) {
 		let singleDay = dates[i];
 		let findPromise = Collection.StoreRanking
@@ -25,7 +24,6 @@ module.exports = (startDate, endDate) => {
 						.then(dataArry=>{
 							console.log('no data in cache but gone fishing');
 							dataArry.forEach(element=>saveToDB(element));
-							console.log('dataarry length', dataArry.length)
 							return dataArry;
 						})
 						.catch(err => {
@@ -47,20 +45,16 @@ module.exports = (startDate, endDate) => {
 				console.error('something went wrong');
 			}
 			else {
-				console.log('data array', dataArry);
 				let perDayPerStoreArry = [];
 				dataArry.forEach(perDay=>{perDay.forEach(perStore=>perDayPerStoreArry.push(perStore))});
-				let headerRow = ['El Segundo, CA', 'Avon, OH'];
+				let headerRow = ['El Segundo, CA', 'Avon, OH', 'Palo Alto, CA'];
 				let viewReadyObj = prepareForView(perDayPerStoreArry, headerRow);
 				console.log('object',viewReadyObj);
 				return viewReadyObj;
 			}
-
 			//el segundo, avon, 
 		})
 		.catch(err=>{
-			// return err;
-			console.error('eror in promise all', err.message);
 			return Promise.reject(err);
 		});
 }
@@ -82,15 +76,12 @@ function fetchPortal(startDate, endDate){
 
 	return getCookie(username, password, 'http://portal.snipits.com/login.cfm', ciphers)
 	.then(cookie => {
-		console.log('yanyanyan', cookie);
 		return getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=Rankings', formData, ciphers);
 	})
 	.then(rankingsPg => {
-		console.log('aegwhwgweh');
 		return getRankingsContent(rankingsPg);
 	})
 	.then(rankingsTbl => {
-		console.log('getting rankingsTbl');
 		let rankingArry = rankArry(rankingsTbl);
 		let newRankingArry = [];
 		for (let i = 0; i < rankingArry.length; i++) {
@@ -100,11 +91,9 @@ function fetchPortal(startDate, endDate){
 			newRankingArry[i].storeName = rankingArry[i][1];
 			newRankingArry[i].haircutCount = rankingArry[i][2];
 		}
-		console.log('ranking arryay length', newRankingArry.length);
 		return newRankingArry;
 	})
 	.catch(err => {
-		console.error('error fetching', err.message);
 		return Promise.reject(err);
 		// return err; 
 	});

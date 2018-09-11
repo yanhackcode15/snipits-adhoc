@@ -16,10 +16,9 @@ module.exports = (cookie, uri, formData, ciphers)=> {
 			transform: function (body) {
 		        return body;
 		    },
-            // ciphers, // Required for the IIS server to not simply end the connection
+            ciphers, // Required for the IIS server to not simply end the connection
 		})
 		.then(body=>{
-			console.log('bodybodyboy',body);
 			return body;
 		})
 		.catch(err=>{

@@ -8,7 +8,6 @@ const getPayDatePair = require('../src/common/getStartEndDates'); //a function r
 const sendAll = require('../src/sendAll');
 const sendTest = require('../src/sendTest');
 const getRankings = require('../src/others/ranking');
-// const phoneNumbers = require('../src/teamNumbers');
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 router.get('/', function(req, res, next){
@@ -95,8 +94,6 @@ router.post('/viewRanks', function(req, res, next){
 	// let toDate = '2018-08-21';
 	getRankings(fromDate, toDate)
 		.then(results=>{
-			console.log('getRankings result', results);
-			// res.send(results);
 			res.render('monthPageRanksAdmin', {output: results});
 		})
 		.catch(err=>{
@@ -106,8 +103,6 @@ router.post('/viewRanks', function(req, res, next){
 });
 
 router.get('/removeRanking/:fromDate/:toDate', function(req, res, next){
-	// let fromDate = '2018-08-07';
-	// let toDate = '2018-08-07';
 	let fromDate = req.params.fromDate;
 	let toDate = req.params.toDate;
 	removeRanking(fromDate, toDate)
@@ -117,8 +112,6 @@ router.get('/removeRanking/:fromDate/:toDate', function(req, res, next){
 });
 
 router.get('/removeHour/:fromDate/:toDate', function(req, res, next){
-	// let fromDate = '2018-08-07';
-	// let toDate = '2018-08-07';
 	let fromDate = req.params.fromDate;
 	let toDate = req.params.toDate;
 	removeHour(fromDate, toDate)
@@ -128,8 +121,6 @@ router.get('/removeHour/:fromDate/:toDate', function(req, res, next){
 });
 
 router.get('/removeProductivity/:fromDate/:toDate', function(req, res, next){
-	// let fromDate = '2018-08-07';
-	// let toDate = '2018-08-07';
 	let fromDate = req.params.fromDate;
 	let toDate = req.params.toDate;
 	removeProductivity(fromDate, toDate)
