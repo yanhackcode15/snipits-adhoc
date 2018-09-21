@@ -1,0 +1,27 @@
+ul
+  each tranx in output
+    each val, key in tranx
+      li Transaction
+        h3 Line Item
+          each item in val.lineItem
+            h5 Child's Name: #{item.customer.ChildName} | Family Code: #{item.customer.FamilyCode}
+            h5 Stylist: #{item.employee.Stylist} | Receptionist: #{item.employee.Receptionist}
+            ul Product
+              li Category: #{item.product.Category}
+              li Discount Amount: #{item.product.DiscountAmount}
+              li Line Total: #{item.product.LineTotal}
+              li Product Name: #{item.product.ProductName}
+              li Promotion Name: #{item.product.PromotionName}
+              li Quantity: #{item.product.Quantity}
+              li Tax: #{item.product.TaxAmount}
+              li Unit Price: #{item.product.UnitPrice}
+        h3 Payment Information
+          ul
+            li Amount Tender: #{val.payment.AmountTendered}
+            li Changes: #{val.payment.ChangeGiven}
+            li Date: #{val.payment.DateValue}
+            li Payment Type: #{val.payment.PaymentType}
+            li Sales Total: #{val.payment.SaleTotal}
+            li Time: #{val.payment.Time}    
+      
+

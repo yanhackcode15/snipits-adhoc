@@ -8,6 +8,7 @@ const getPayDatePair = require('../src/common/getStartEndDates'); //a function r
 const sendAll = require('../src/sendAll');
 const sendTest = require('../src/sendTest');
 const getRankings = require('../src/others/ranking');
+const getSales = require('../src/sales/sales');
 const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 router.get('/', function(req, res, next){
@@ -126,6 +127,16 @@ router.get('/removeProductivity/:fromDate/:toDate', function(req, res, next){
 	removeProductivity(fromDate, toDate)
 		.then(result=>{
 			res.send('removed');
+		});
+});
+
+router.get('/salesDetail/:fromDate/:toDate', function(req, res, next){
+	let fromDate = req.params.fromDate;
+	let toDate = req.params.toDate;
+	getSales(fromDate, toDate)
+		.then(result=>{
+			// res.send(result);
+			res.render('salesDetailPageAdmin', {output: result.toJSON()});
 		});
 });
 

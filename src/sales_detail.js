@@ -43,12 +43,17 @@ const toDate = process.argv[3];
 
 //build a array
 const dateArry = [];
-const month = fromDate.split('/')[0];
-const year = fromDate.split('/')[2];
-const i = fromDate.split('/')[1];
-const j = toDate.split('/')[1];
+const month = +fromDate.split('/')[0]; //convert to nunber with plus sign
+const year = +fromDate.split('/')[2];
+const i = +fromDate.split('/')[1];
+const j = +toDate.split('/')[1];
+let mm = '';
+let dd = '';
+let yyyy = year;
 for (var k = i; k <= j; k++) {
-	var dateString = month + '/' + k + '/' + year;
+	mm = (month <= 9 ? '0' + month : '' + month); 
+	dd = (k <= 9 ? '0' + k : '' + k);
+	var dateString = mm + '/' + dd + '/' + yyyy;
 	dateArry.push(dateString);
 }
 
@@ -89,10 +94,8 @@ function singleDayReport(oneDate) {
 		let transactions = tranxArry(tableString, oneDate);
 		return Promise.all(transactions.map(sendToFire)) //return promises
 			.then(()=>{
-					// return firebase.app().delete().then(()=>{
-						console.log('done');
-						return true;
-					// });
+					console.log('done');
+					return true;
 			})
 			.catch(err=>{
 				console.log('error saving transactions', err.message);
@@ -142,38 +145,30 @@ function tranxArry(tableString, dateString) {
 			let text = $(td).text().trim();
 			
 			if (text === 'Time:') {
-				// console.log('time');
-				// let newObj = Object.assign({}, tranxObj(), {payment: $.html(element)});
 				let newObj = Object.assign({}, tranxObj(), {payment: paymentObj(elem, dateString)});
 				tranxArry.push(newObj);
 			}
 			else if (text === 'Product:') { //if it's the product table
-				// console.log('product');
-				// let newObj = Object.assign({}, lineItemObj(), {product: $.html(element)});
 				let newObj = Object.assign({}, lineItemObj(), {product: productObj(elem)});
 				tranxArry[tranxArry.length-1].lineItem.push(newObj);
 			}
 			else if (text === 'Name:') { //if it's the child table
-				// console.log('name');
 				let lineItemArray = tranxArry[tranxArry.length-1].lineItem;
-				// lineItemArray[lineItemArray.length-1].customer = $.html(element);
 				lineItemArray[lineItemArray.length-1].customer = customerObj(elem);
 
 			}
 			else if (text === 'Receptionist:') { //if it's the receiptionist/stylist able
-				// console.log('employee');
 				let lineItemArray = tranxArry[tranxArry.length-1].lineItem;
-				// lineItemArray[lineItemArray.length-1].employee = $.html(element);
 				lineItemArray[lineItemArray.length-1].employee = employeeObj(elem);
 			}
 
 		});
-	// console.log(tranxArry[0].lineItem);
 	return tranxArry;
 
 }
 
 function paymentObj(paymentStr, dateStr) {
+	//convert dateStr from MM/DD/YYYY to YYYY/MM/DD so it's sortable
 	let $ = cheerio.load(paymentStr);
 	let data = {
 		Time: '',
@@ -200,7 +195,12 @@ function paymentObj(paymentStr, dateStr) {
 		else if (count === 9) {
 			data.ChangeGiven = $(elem).text().trim();
 		}
-		data.DateValue = dateStr;
+		//convert dateStr to a sortable format YYYY/MM/DD from MM/DD/YYYY
+		let dateArray = dateStr.split('/');
+		let mm = dateArray[0];
+		let dd = dateArray[1];
+		let yyyy = dateArray[2];
+		data.DateValue = +(yyyy + '' + mm + '' + dd);
 		count ++;
 	});
 	return data;

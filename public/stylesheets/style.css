@@ -65,3 +65,7 @@ td {
 .table > thead > tr.nofix {
     height: 38px !important;
 }
+
+.section {
+    margin: 15px;
+}
