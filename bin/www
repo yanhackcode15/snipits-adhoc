@@ -5,7 +5,6 @@
  */
 const cron = require("node-cron");
 const app = require('../app');
-const rankingNightly = require('../src/cron/rankingCron');
 const debug = require('debug')('yandothu:server');
 const http = require('http');
 
@@ -30,9 +29,6 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-
-cron.schedule("59 23 * * *", rankingNightly);
-// cron.schedule("* * * * *", rankingNightly);
 /**
  * Normalize a port into a number, string, or false.
  */
