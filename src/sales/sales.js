@@ -14,26 +14,6 @@ firebase.initializeApp(config);
 const db = firebase.database();
 const ref = db.ref('/transactions');
 
-// module.exports = (fromDate, toDate)=>{
-// 	//convert from and to date to 'YYYYMMDD' from 'YYYY-MM-DD'
-// 	let startDateArry = fromDate.split('-');
-// 	let startDate = +('' + startDateArry[0] + startDateArry[1] + startDateArry[2]);
-// 	let endDateArry = toDate.split('-');
-// 	let endDate = +('' + endDateArry[0] + endDateArry[1] + endDateArry[2]);
-// 	var tranx = [];
-// 	let orderedRef = ref.orderByChild('payment/DateValue')
-// 		.startAt(startDate)
-// 		.endAt(endDate);
-// 	return orderedRef.once('value',
-// 		snapshot=>{
-// 			snapshot.forEach(childSnapShot=>{
-// 				tranx.push(childSnapShot.val());
-// 			});
-// 			return tranx;
-// 		});
-// }
-
-
 module.exports = (fromDate, toDate) => ref
 	// Order By
 	.orderByChild('payment/DateValue')
