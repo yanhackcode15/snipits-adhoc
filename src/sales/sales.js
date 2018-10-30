@@ -49,8 +49,6 @@ module.exports = (fromDate, toDate) => ref
 		}
 	);
 
-// YUI Doc
-// http://yui.github.io/yuidoc/syntax/index.html
 /**
  * Converts international date string to integer
  *
