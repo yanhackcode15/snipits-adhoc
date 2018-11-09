@@ -1,0 +1,25 @@
+- var thisDate = new Date()
+- var currentMonth = thisDate.getMonth() + 1
+doctype html
+html
+  include includes/head.pug
+  body
+    div.container
+      a(href="recent") Most Recent Pay Hours
+    div.container
+      form(action="/viewHours/" method="post")
+        .form-group
+          label(for="year") Select Year
+          select(class="form-control" id="year" name="year")
+            option 2018
+            option 2017
+        .form-group
+          label(for="month") Select Month
+          select(class="form-control" id="month" name="month")
+            - for (var i = currentMonth - 1; i >= 1; i --)
+              option #{i}
+        .form-group
+          input(type="submit" value="Submit")
+    script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+    

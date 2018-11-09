@@ -1,0 +1,29 @@
+each tranx in output
+  .card.section
+    h6.card-header Transaction Date: #{tranx.payment.DateValue}, Time: #{tranx.payment.Time}
+    .card-body
+      each item in tranx.lineItem
+        .card 
+          .card-header Child's Name: #{item.customer.ChildName} --- | --- Family Code: #{item.customer.FamilyCode}
+          .card-body
+            ul.list-group.list-group-flush
+              li.list-group-item Stylist: #{item.employee.Stylist}
+              li.list-group-item Receptionist: #{item.employee.Receptionist}
+              li.list-group-item Category: #{item.product.Category}
+              li.list-group-item Discount Amount: #{item.product.DiscountAmount}
+              li.list-group-item Line Total: #{item.product.LineTotal}
+              li.list-group-item Product Name: #{item.product.ProductName}
+              li.list-group-item Promotion Name: #{item.product.PromotionName}
+              li.list-group-item Quantity: #{item.product.Quantity}
+              li.list-group-item Tax: #{item.product.TaxAmount}
+              li.list-group-item Unit Price: #{item.product.UnitPrice}
+      .card 
+        .card-header Payment 
+        .card-body
+          ul.list-group.list-group-flush
+            li.list-group-item Amount Tender: #{tranx.payment.AmountTendered}
+            li.list-group-item Changes: #{tranx.payment.ChangeGiven}
+            li.list-group-item Date: #{tranx.payment.DateValue}
+            li.list-group-item Payment Type: #{tranx.payment.PaymentType}
+            li.list-group-item Sales Total: #{tranx.payment.SaleTotal}
+            li.list-group-item Time: #{tranx.payment.Time}    

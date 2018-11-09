@@ -1,0 +1,71 @@
+* {
+	font-size: 12px;
+}
+
+.container {
+	padding: 20px;
+	margin: 20px;
+}
+
+.table > thead > tr {
+	height: 56px;
+}
+
+.table > thead > tr > th:first-child {
+    position: fixed;
+    display: inline-block;
+    width: 200px;
+    background-color: #212529;
+    height: 56px;
+}
+.table > tbody > tr > th:first-child {
+    position: fixed;
+    display: inline-block;
+    width: 200px;
+    background-color: white;
+    /*height: 100%;*/
+}
+
+.table > thead > tr > th:nth-child(2) {
+    padding-left: 200px;
+}
+
+.table > tbody > tr > td:nth-child(2) {
+    padding-left: 200px !important;
+}
+
+td {
+	text-align: center;
+}
+
+.table > thead > tr > th:first-child.nofix {
+    display: inline-block;
+    position: static !important;
+    width: 200px;
+    background-color: #212529;
+    height: 100% !important;
+    /*height: 56px;*/
+}
+.table > tbody > tr > th:first-child.nofix {
+    display: inline-block;
+    position: static !important;
+    width: 200px;
+    background-color: white;
+    /*height: 100%;*/
+}
+
+.table > thead > tr > th:nth-child(2).nofix {
+    padding-left: 0px !important;
+}
+
+.table > tbody > tr > td:nth-child(2).nofix {
+    padding-left: 0px !important;
+    text-align: center !important;
+}
+.table > thead > tr.nofix {
+    height: 38px !important;
+}
+
+.section {
+    margin: 15px;
+}

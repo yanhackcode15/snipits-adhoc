@@ -1,0 +1,13 @@
+- var dataObj = output[Object.keys(output)[1]] 
+table.table.table-bordered
+  thead.thead-dark.nofix
+    tr
+      th(scope="col" class="nofix") Date
+      each val, key in dataObj	
+        th(scope="col" class='nofix')= key
+  tbody
+    each storeData, date in output
+      tr
+        th(scope="row" class="nofix")= date
+          each val, key in dataObj
+            td.nofix= storeData[key] 

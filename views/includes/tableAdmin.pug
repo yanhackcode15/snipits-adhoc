@@ -1,0 +1,19 @@
+- var dataObj = output[Object.keys(output)[1]] //object containing perf hours data for one employee
+- var whiteList = ['regularTotal', 'overtimeTotal', 'Total']
+
+table.table.table-bordered
+  thead.thead-dark
+    tr
+      th(scope="col") Name
+      each val, key in dataObj	
+        th(scope="col")= key
+  tbody
+    each employeeData, name in output
+      tr
+        if whiteList.includes(name)
+          th(scope="row")= name
+            td= employeeData.hours
+        else
+          th(scope="row")= name
+            each val, key in dataObj
+              td= employeeData[key] 
