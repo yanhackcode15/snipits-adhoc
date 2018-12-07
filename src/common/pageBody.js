@@ -3,7 +3,7 @@ require('promise.prototype.finally').shim();
 const request = require('request-promise');
 // const contentFilters = require('../common/filters');
 
-module.exports = (cookie, uri, formData, ciphers)=> {
+module.exports = (cookie, uri, formData)=> {
 	console.log('get page', uri);
 	return request({	
 			method: 'POST',
@@ -16,7 +16,7 @@ module.exports = (cookie, uri, formData, ciphers)=> {
 			transform: function (body) {
 		        return body;
 		    },
-            ciphers, // Required for the IIS server to not simply end the connection
+             // Required for the IIS server to not simply end the connection
 		})
 		.then(body=>{
 			return body;

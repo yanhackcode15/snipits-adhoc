@@ -125,8 +125,8 @@ function fetchPortal(startDate, endDate){
 		run:'Run',
 	};
 
-	return getCookie(username, password, 'https://portal.snipits.com/login.cfm', ciphers)
-	.then(cookie => getPage(cookie, 'https://portal.snipits.com/runreport.cfm?name=Productivity', formData, ciphers))
+	return getCookie(username, password, 'http://portal.snipits.com/login.cfm')
+	.then(cookie => getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=Productivity', formData))
 	.then(productivityPg => getProductivityContent(productivityPg))
 	.then(productivityTbl => {
 		let prodArry = productivityArray(productivityTbl);

@@ -1,7 +1,7 @@
 require('promise.prototype.finally').shim();
 const request = require('request-promise');
 
-module.exports = (username, password, url, ciphers)=>{
+module.exports = (username, password, url, )=>{
 	return request.post({
             url,
             form: {
@@ -10,7 +10,7 @@ module.exports = (username, password, url, ciphers)=>{
             },
             resolveWithFullResponse: true,
             simple: false,
-            ciphers, // Required for the IIS server to not simply end the connection
+             // Required for the IIS server to not simply end the connection
         })
         .then(response => {
             const cookies = response.headers['set-cookie'];

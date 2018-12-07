@@ -111,8 +111,8 @@ function fetchPortal(startDate, endDate) {
 		run:'Run',
 	};
 
-	return getCookie(username, password, 'https://portal.snipits.com/login.cfm', ciphers)
-	.then(cookie => getPage(cookie, 'https://portal.snipits.com/runreport.cfm?name=HoursWorked', formData, ciphers))
+	return getCookie(username, password, 'http://portal.snipits.com/login.cfm')
+	.then(cookie => getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=HoursWorked', formData))
 	.then(hrsPg => getHoursContent(hrsPg))
 	.then(hrsTbl => {
 		let hoursWorked = arryToObj(hrsTbl);
