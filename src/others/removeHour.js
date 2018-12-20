@@ -17,6 +17,7 @@ module.exports = (startDate, endDate) => {
 					console.error("no record found and nothing to remove");
 				}
 				else {
+					console.log('about to remove data');
 					docs.forEach(doc=>doc.remove()); 
 					console.log('docs removed');
 				}

@@ -93,7 +93,6 @@ module.exports = (startDate, endDate) => {
 
 	return Promise.all(results)
 		.then(dataArry=>{
-			console.log('egewrhrwh', dataArry);
 			if (dataArry.find(element=>element===null) === null) {
 				console.error('something went wrong');
 			}
@@ -101,7 +100,6 @@ module.exports = (startDate, endDate) => {
 				let perDayPerStylistArry = [];
 				dataArry.forEach(element=>{element.forEach(ele=>perDayPerStylistArry.push(ele))});
 				let viewReadyObj = prepareForView(perDayPerStylistArry, dates);
-				console.log('ViewwwwwReadddy', viewReadyObj);
 				return viewReadyObj;
 			}
 		});
@@ -242,7 +240,6 @@ function prepareForView(dataArry, headerRow) {
 	//dataArry is in [{name, date, dayOfWeek, hours}]
 	//return {name: {YYYY-MM-DD-MON: 7}, name:{...}}
 
-	console.log('input data array', dataArry);
 	let dataObj = {};
 	let rowTemplate = headerRow.reduce((template, metrix)=>{
 		template[metrix] = 0;

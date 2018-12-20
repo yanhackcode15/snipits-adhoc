@@ -12,7 +12,7 @@ const fs = require('fs');
 const getCookies = require('./common/cookie');
 const username = process.env.PORTAL_ID;
 const password = process.env.PORTAL_PASSWORD;
-const salesDetailsUrl = 'https://portal.snipits.com/runreport.cfm?name=SalesDetails';
+const salesDetailsUrl = 'http://portal.snipits.com/runreport.cfm?name=SalesDetails';
 const defaults = {
     flags: 'w',
     mode: 0o666,
@@ -71,7 +71,7 @@ function singleDayReport(oneDate) {
 		output_as:'html',
 		run:'Run',
 	};
-	return getCookies(username, password, 'https://portal.snipits.com/login.cfm', 'DES-CBC3-SHA')
+	return getCookies(username, password, 'https://portal.snipits.com/login.cfm')
 	.then(cookiestring=>{
 		return request({	
 			method: 'POST',
@@ -84,7 +84,7 @@ function singleDayReport(oneDate) {
 			transform: function (body) {
 		        return body;
 		    },
-            ciphers: 'DES-CBC3-SHA', // Required for the IIS server to not simply end the connection
+            // Required for the IIS server to not simply end the connection
 		});
 	})
 	.then(body=>{

@@ -113,6 +113,7 @@ router.get('/removeRanking/:fromDate/:toDate', function(req, res, next){
 });
 
 router.get('/removeHour/:fromDate/:toDate', function(req, res, next){
+	console.log('router remove hour');
 	let fromDate = req.params.fromDate;
 	let toDate = req.params.toDate;
 	removeHour(fromDate, toDate)

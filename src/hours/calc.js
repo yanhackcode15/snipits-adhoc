@@ -24,6 +24,7 @@ module.exports = (startDate, endDate) => {
 				else if (docs.length === 0) {
 					return fetchPortal(singleDay, singleDay)
 						.then(dataArry=>{
+							console.log('data array to save to db', dataArry);	
 							dataArry.forEach(element=>saveToDB(element));
 							return dataArry;
 						});
@@ -96,7 +97,7 @@ function fetchPortal(startDate, endDate) {
 	// return an array [] of {name:, date:, hours:,}
 	const username = process.env.PORTAL_ID;
 	const password = process.env.PORTAL_PASSWORD;
-	const ciphers = 'DES-CBC3-SHA';
+	// const ciphers = 'DES-CBC3-SHA';
 	const fromDate = startDate;
 	const toDate = endDate; 
 	const formData = {
@@ -112,8 +113,12 @@ function fetchPortal(startDate, endDate) {
 	};
 
 	return getCookie(username, password, 'http://portal.snipits.com/login.cfm')
-	.then(cookie => getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=HoursWorked', formData))
-	.then(hrsPg => getHoursContent(hrsPg))
+	.then(cookie => {
+		return getPage(cookie, 'http://portal.snipits.com/runreport.cfm?name=HoursWorked', formData);
+	})
+	.then(hrsPg => {
+		return getHoursContent(hrsPg);
+	})
 	.then(hrsTbl => {
 		let hoursWorked = arryToObj(hrsTbl);
 		let hoursArry = [];
@@ -127,6 +132,7 @@ function fetchPortal(startDate, endDate) {
 		if(hoursArry.length===0) {
 			hoursArry.push({name: 'Yan-Owner Hu', date: fromDate, hours: 0});
 		}
+		// console.log('hoursArray', hoursArry);
 		return hoursArry;
 	});
 }
